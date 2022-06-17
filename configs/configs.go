@@ -40,10 +40,10 @@ func ConnectDB() *mongo.Client {
 
 }
 
-
 var clientt *mongo.Client = ConnectDB()
 
 func DbCollection() *mongo.Collection {
 	collections := clientt.Database("Army").Collection("soldier")
+	fmt.Println("Created Collection Instance successfully :) ")
 	return collections
 }
