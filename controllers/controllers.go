@@ -59,5 +59,9 @@ func GetOneSoldier() gin.HandlerFunc {
 		userId := ctx.Param("userId")
 		id, _ := primitive.ObjectIDFromHex(userId)
 
+		cbg,cancel := context.WithTimeout(context.Background(), time.Second*10)
+		defer cancel()
+
+		var soldier models.Army
 	}
 }
