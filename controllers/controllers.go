@@ -13,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var collection *mongo.Collection = configs.DbCollection()
+var collections *mongo.Collection = configs.DbCollection()
 var validate = validator.New()
 
 // greeter function
@@ -42,5 +42,7 @@ func CreateSoldier() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, responses.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validateErr.Error()}})
 			return
 		}
+
+		result, err := collections.InsertOne(cbg, soldier)
 	}
 }
