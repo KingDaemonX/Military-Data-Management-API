@@ -5,9 +5,13 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/KingAnointing/go-project/configs"
 	"github.com/KingAnointing/go-project/responses"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/mongo"
 )
+
+var collection *mongo.Collection = configs.DbCollection()
 
 // greeter function
 func Greeter() gin.HandlerFunc {

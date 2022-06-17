@@ -44,6 +44,6 @@ func ConnectDB() *mongo.Client {
 var clientt *mongo.Client = ConnectDB()
 
 func DbCollection() *mongo.Collection {
-	collections := clientt.Database("").Collection("")
+	collections := clientt.Database("Army").Collection("soldier")
 	return collections
 }
