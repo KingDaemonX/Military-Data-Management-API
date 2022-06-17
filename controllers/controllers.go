@@ -10,6 +10,7 @@ import (
 	"github.com/KingAnointing/go-project/responses"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -50,5 +51,13 @@ func CreateSoldier() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusCreated, responses.Response{Status: http.StatusCreated, Message: "created", Data: map[string]interface{}{"data": result}})
+	}
+}
+
+func GetOneSoldier() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		userId := ctx.Param("userId")
+		id, _ := primitive.ObjectIDFromHex(userId)
+
 	}
 }
