@@ -10,6 +10,7 @@ import (
 	"github.com/KingAnointing/go-project/responses"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -59,9 +60,15 @@ func GetOneSoldier() gin.HandlerFunc {
 		userId := ctx.Param("userId")
 		id, _ := primitive.ObjectIDFromHex(userId)
 
-		cbg,cancel := context.WithTimeout(context.Background(), time.Second*10)
+		cbg, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
 
 		var soldier models.Army
+
+		if err := collections.FindOne(cbg, bson.M{"_id": id}).Decode(&soldier); err != nil {
+			ctx.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+		ctx.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": soldier}})
 	}
 }
