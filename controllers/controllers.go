@@ -44,5 +44,9 @@ func CreateSoldier() gin.HandlerFunc {
 		}
 
 		result, err := collections.InsertOne(cbg, soldier)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
 	}
 }
