@@ -9,6 +9,7 @@ func Router()  {
 	router := gin.Default()
 
 	router.GET("/api/",controllers.Greeter())
+	router.POST("/api/soldier",controllers.CreateSoldier())
 
 	router.Run(":8080")
 }
