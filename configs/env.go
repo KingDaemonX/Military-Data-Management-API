@@ -14,5 +14,5 @@ func MongoURI() string {
 		log.Fatal(err)
 	}
 
-	return os.Getenv(MongoURI())
+	return os.Getenv("MONGOURI")
 }
