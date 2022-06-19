@@ -112,6 +112,11 @@ func UpdateSoldierProfile() gin.HandlerFunc {
 
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
-		
+
+		var soldier models.Army
+		if err := c.BindJSON(&soldier); err != nil {
+			c.JSON(http.StatusBadRequest, responses.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
 	}
 }
