@@ -104,3 +104,14 @@ func GetOneSoldierProfile() gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": soldier}})
 	}
 }
+
+func UpdateSoldierProfile() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userId := c.Param("userId")
+		id, _ := primitive.ObjectIDFromHex(userId)
+
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		defer cancel()
+		
+	}
+}
