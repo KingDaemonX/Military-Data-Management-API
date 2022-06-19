@@ -26,7 +26,7 @@ func Greeter() gin.HandlerFunc {
 }
 
 // create function
-func CreateSoldier() gin.HandlerFunc {
+func CreateASoldierProfile() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		cbg, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
@@ -45,7 +45,39 @@ func CreateSoldier() gin.HandlerFunc {
 			return
 		}
 
-		result, err := collections.InsertOne(cbg, soldier)
+		// serialize the data into soldier profile
+		soldierProfile := models.Army{
+			&models.Soldier{
+				ID:              primitive.NewObjectID(),
+				FirstName:       soldier.Soldier.FirstName,
+				LastName:        soldier.Soldier.LastName,
+				NickName:        soldier.Soldier.NickName,
+				ArmyNumber:      soldier.Soldier.ArmyNumber,
+				Age:             soldier.Soldier.Age,
+				Rank:            soldier.Soldier.Rank,
+				NextOfKin:       soldier.Soldier.NextOfKin,
+				ResidentBarrack: soldier.Soldier.ResidentBarrack,
+				Address:         soldier.Soldier.Address,
+				PlaceOfService:  soldier.Soldier.PlaceOfService,
+				IsAssignedArm:   soldier.Soldier.IsAssignedArm,
+				Division: &models.Division{
+					DivisionName:  soldier.Soldier.Division.DivisionName,
+					CommanderName: soldier.Soldier.Division.CommanderName,
+					Location:      soldier.Soldier.Division.Location,
+					Position:      soldier.Soldier.Division.Position,
+					Department:    soldier.Soldier.Division.Department,
+				},
+			},
+		}
+		// &models.Division{
+		// 	DivisionName:  soldier.Division.DivisionName,
+		// 	CommanderName: soldier.Division.CommanderName,
+		// 	Location:      soldier.Division.Location,
+		// 	Position:      soldier.Division.Position,
+		// 	Department:    soldier.Division.Department,
+		// },
+		// },
+		result, err := collections.InsertOne(cbg, soldierProfile)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
@@ -55,7 +87,7 @@ func CreateSoldier() gin.HandlerFunc {
 	}
 }
 
-func GetOneSoldier() gin.HandlerFunc {
+func GetOneSoldierProfile() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		userId := ctx.Param("userId")
 		id, _ := primitive.ObjectIDFromHex(userId)
