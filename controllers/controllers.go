@@ -166,5 +166,21 @@ func DeleteASoldierProfile() gin.HandlerFunc {
 		userId := c.Param("userId")
 		id, _ := primitive.ObjectIDFromHex(userId)
 
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		defer cancel()
+
+		result, err := collections.DeleteOne(ctx, bson.M{"_id": id})
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		if result.DeletedCount < 1 {
+			c.JSON(http.StatusNotFound, responses.Response{Status: http.StatusNotFound, Message: "error", Data: map[string]interface{}{"data": "User With Specified Army Number not found"}})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": "Profile successfully deleted"}})
 	}
 }
