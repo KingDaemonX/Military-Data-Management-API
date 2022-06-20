@@ -160,3 +160,11 @@ func UpdateSoldierProfile() gin.HandlerFunc {
 		c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": updatedProfile}})
 	}
 }
+
+func DeleteASoldierProfile() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userId := c.Param("userId")
+		id, _ := primitive.ObjectIDFromHex(userId)
+
+	}
+}
