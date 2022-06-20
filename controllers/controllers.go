@@ -213,3 +213,9 @@ func GetAllSoldierProfile() gin.HandlerFunc {
 		c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": soldiers}})
 	}
 }
+
+func DeleteAllSoldierProfile() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+	}
+}
