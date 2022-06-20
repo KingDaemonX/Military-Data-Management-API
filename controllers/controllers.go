@@ -222,7 +222,7 @@ func DeleteAllSoldierProfile() gin.HandlerFunc {
 
 		result, _ := collections.DeleteMany(ctx, bson.D{})
 
-		message, _ := fmt.Printf("Deleted all user from database with a count of : %v", result.DeletedCount)
+		message := fmt.Sprintf("Deleted all user from database with a count of : %v", result.DeletedCount)
 
 		c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": message}})
 
