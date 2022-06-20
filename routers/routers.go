@@ -11,6 +11,7 @@ func Router() {
 	router.GET("/api/", controllers.Greeter())
 	router.POST("/api/soldier", controllers.CreateASoldierProfile())
 	router.GET("/api/soldier/:userId", controllers.GetOneSoldierProfile())
+	router.PUT("/api/soldier/:userId", controllers.UpdateSoldierProfile())
 
 	router.Run(":8080")
 }

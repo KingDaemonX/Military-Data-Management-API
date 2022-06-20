@@ -143,8 +143,20 @@ func UpdateSoldierProfile() gin.HandlerFunc {
 		result, err := collections.UpdateOne(ctx, filter, bson.M{"$set": filter})
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, responses.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
+
+		var updatedProfile models.Army
+
+		if result.MatchedCount == 1 {
+			err := collections.FindOne(ctx, bson.M{"_id": id}).Decode(&updatedProfile)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+				return
+			}
+		}
+
+		c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": updatedProfile}})
 	}
 }
