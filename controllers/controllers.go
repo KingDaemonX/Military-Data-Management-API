@@ -216,6 +216,9 @@ func GetAllSoldierProfile() gin.HandlerFunc {
 
 func DeleteAllSoldierProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		defer cancel()
 
+		result, err := collections.DeleteMany(ctx, bson.D{})
 	}
 }
