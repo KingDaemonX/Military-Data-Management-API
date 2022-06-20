@@ -9,9 +9,10 @@ func Router() {
 	router := gin.Default()
 
 	router.GET("/api/", controllers.Greeter())
-	router.POST("/api/soldier", controllers.CreateASoldierProfile())
-	router.GET("/api/soldier/:userId", controllers.GetOneSoldierProfile())
-	router.PUT("/api/soldier/:userId", controllers.UpdateSoldierProfile())
-	router.DELETE("/api/soldier/:userId",controllers.DeleteASoldierProfile())
+	router.POST("/api/soldiers", controllers.CreateASoldierProfile())
+	router.GET("/api/soldiers/:userId", controllers.GetOneSoldierProfile())
+	router.GET("/api/soldiers", controllers.GetAllSoldierProfile())
+	router.PUT("/api/soldiers/:userId", controllers.UpdateSoldierProfile())
+	router.DELETE("/api/soldiers/:userId",controllers.DeleteASoldierProfile())
 	router.Run(":8080")
 }
