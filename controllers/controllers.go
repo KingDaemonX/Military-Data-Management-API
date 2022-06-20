@@ -98,7 +98,7 @@ func GetOneSoldierProfile() gin.HandlerFunc {
 
 		var soldier models.Army
 
-		if err := collections.FindOne(cbg, bson.M{"_id": id}).Decode(&soldier); err != nil {
+		if err := collections.FindOne(cbg, bson.M{"soldier.id": id}).Decode(&soldier); err != nil {
 			ctx.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
@@ -127,7 +127,7 @@ func UpdateSoldierProfile() gin.HandlerFunc {
 			return
 		}
 
-		filter := bson.M{
+		update := bson.M{
 			"age":               soldier.Soldier.Age,
 			"rank":              soldier.Soldier.Rank,
 			"next_of_kin":       soldier.Soldier.NextOfKin,
@@ -141,7 +141,7 @@ func UpdateSoldierProfile() gin.HandlerFunc {
 			"position":          soldier.Soldier.Division.Position,
 			"department":        soldier.Soldier.Division.Department,
 		}
-		result, err := collections.UpdateOne(ctx, filter, bson.M{"$set": filter})
+		result, err := collections.UpdateOne(ctx, bson.M{"soldier.id":id}, bson.M{"$set": update})
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
@@ -151,7 +151,7 @@ func UpdateSoldierProfile() gin.HandlerFunc {
 		var updatedProfile models.Army
 
 		if result.MatchedCount == 1 {
-			err := collections.FindOne(ctx, bson.M{"_id": id}).Decode(&updatedProfile)
+			err := collections.FindOne(ctx, bson.M{"soldier.id": id}).Decode(&updatedProfile)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 				return
@@ -170,7 +170,7 @@ func DeleteASoldierProfile() gin.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
 
-		result, err := collections.DeleteOne(ctx, bson.M{"_id": id})
+		result, err := collections.DeleteOne(ctx, bson.M{"id": id})
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
@@ -192,14 +192,14 @@ func GetAllSoldierProfile() gin.HandlerFunc {
 		defer cancel()
 		var soldiers []models.Army
 
-		cursor, err := collections.Find(ctx, bson.D{})
+		cursor, err := collections.Find(ctx, bson.M{})
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
 
-		cursor.Close(ctx)
+		defer cursor.Close(ctx)
 
 		for cursor.Next(ctx) {
 			var singleSoldier models.Army

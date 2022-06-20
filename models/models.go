@@ -10,7 +10,7 @@ type Army struct {
 }
 
 type Soldier struct {
-	ID         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	ID         primitive.ObjectID `json:"id,omitempty"`
 	FirstName  string             `json:"first_name" validate:"required,min=2,max=200"`
 	LastName   string             `json:"last_name" validate:"required,min=2,max=200"`
 	NickName   string             `json:"nick_name" validate:"required,min=2,max=200"`
