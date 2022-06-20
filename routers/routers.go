@@ -12,6 +12,6 @@ func Router() {
 	router.POST("/api/soldier", controllers.CreateASoldierProfile())
 	router.GET("/api/soldier/:userId", controllers.GetOneSoldierProfile())
 	router.PUT("/api/soldier/:userId", controllers.UpdateSoldierProfile())
-
+	router.DELETE("/api/soldier/:userId",controllers.DeleteASoldierProfile())
 	router.Run(":8080")
 }

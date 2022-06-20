@@ -184,3 +184,10 @@ func DeleteASoldierProfile() gin.HandlerFunc {
 		c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": "Profile successfully deleted"}})
 	}
 }
+
+
+func GetAllSoldierProfile() gin.HandlerFunc{
+	return func(c *gin.Context) {
+		
+	}
+}
