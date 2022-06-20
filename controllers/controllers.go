@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -219,6 +220,11 @@ func DeleteAllSoldierProfile() gin.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
 
-		result, err := collections.DeleteMany(ctx, bson.D{})
+		result, _ := collections.DeleteMany(ctx, bson.D{})
+
+		message, _ := fmt.Printf("Deleted all user from database with a count of : %v", result.DeletedCount)
+
+		c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": message}})
+
 	}
 }
