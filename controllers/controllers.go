@@ -114,7 +114,35 @@ func UpdateSoldierProfile() gin.HandlerFunc {
 		defer cancel()
 
 		var soldier models.Army
+		// validate updated input
 		if err := c.BindJSON(&soldier); err != nil {
+			c.JSON(http.StatusBadRequest, responses.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		// validate the structure and required field
+		if validateErr := validate.Struct(&soldier); validateErr != nil {
+			c.JSON(http.StatusBadRequest, responses.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validateErr.Error()}})
+			return
+		}
+
+		filter := bson.M{
+			"age":               soldier.Soldier.Age,
+			"rank":              soldier.Soldier.Rank,
+			"next_of_kin":       soldier.Soldier.NextOfKin,
+			"resident_barracks": soldier.Soldier.ResidentBarrack,
+			"address":           soldier.Soldier.Address,
+			"place_of_service":  soldier.Soldier.PlaceOfService,
+			"is_armed":          soldier.Soldier.IsAssignedArm,
+			"division_name":     soldier.Soldier.Division.DivisionName,
+			"commander":         soldier.Soldier.Division.CommanderName,
+			"location":          soldier.Soldier.Division.Location,
+			"position":          soldier.Soldier.Division.Position,
+			"department":        soldier.Soldier.Division.Department,
+		}
+		result, err := collections.UpdateOne(ctx, filter, bson.M{"$set": filter})
+
+		if err != nil {
 			c.JSON(http.StatusBadRequest, responses.Response{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
