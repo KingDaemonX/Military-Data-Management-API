@@ -185,9 +185,16 @@ func DeleteASoldierProfile() gin.HandlerFunc {
 	}
 }
 
-
-func GetAllSoldierProfile() gin.HandlerFunc{
+func GetAllSoldierProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		defer cancel()
+
+		cursor,err := collections.Find(ctx,bson.D{})
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
 	}
 }
