@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -210,5 +211,6 @@ func GetAllSoldierProfile() gin.HandlerFunc {
 			soldiers = append(soldiers, singleSoldier)
 		}
 
+		c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": soldiers}})
 	}
 }
