@@ -189,12 +189,26 @@ func GetAllSoldierProfile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
+		var soldiers []models.Army
 
-		cursor,err := collections.Find(ctx,bson.D{})
+		cursor, err := collections.Find(ctx, bson.D{})
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
+
+		cursor.Close(ctx)
+
+		for cursor.Next(ctx) {
+			var singleSoldier models.Army
+			if err := cursor.Decode(&singleSoldier); err != nil {
+				c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+				return
+			}
+
+			soldiers = append(soldiers, singleSoldier)
+		}
+
 	}
 }
