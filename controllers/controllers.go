@@ -128,20 +128,20 @@ func UpdateSoldierProfile() gin.HandlerFunc {
 		}
 
 		update := bson.M{
-			"age":               soldier.Soldier.Age,
-			"rank":              soldier.Soldier.Rank,
-			"next_of_kin":       soldier.Soldier.NextOfKin,
-			"resident_barracks": soldier.Soldier.ResidentBarrack,
-			"address":           soldier.Soldier.Address,
-			"place_of_service":  soldier.Soldier.PlaceOfService,
-			"is_armed":          soldier.Soldier.IsAssignedArm,
-			"division_name":     soldier.Soldier.Division.DivisionName,
-			"commander":         soldier.Soldier.Division.CommanderName,
-			"location":          soldier.Soldier.Division.Location,
-			"position":          soldier.Soldier.Division.Position,
-			"department":        soldier.Soldier.Division.Department,
+			"soldier.age":                    soldier.Soldier.Age,
+			"soldier.rank":                   soldier.Soldier.Rank,
+			"soldier.nextofkin":              soldier.Soldier.NextOfKin,
+			"soldier.residentbarracks":       soldier.Soldier.ResidentBarrack,
+			"soldier.address":                soldier.Soldier.Address,
+			"soldier.placeofservice":         soldier.Soldier.PlaceOfService,
+			"soldier.isassignedarm":          soldier.Soldier.IsAssignedArm,
+			"soldier.division.divisionname":  soldier.Soldier.Division.DivisionName,
+			"soldier.division.commandername": soldier.Soldier.Division.CommanderName,
+			"soldier.division.location":      soldier.Soldier.Division.Location,
+			"soldier.division.position":      soldier.Soldier.Division.Position,
+			"soldier.division.department":    soldier.Soldier.Division.Department,
 		}
-		result, err := collections.UpdateOne(ctx, bson.M{"soldier.id":id}, bson.M{"$set": update})
+		result, err := collections.UpdateOne(ctx, bson.M{"soldier.id": id}, bson.M{"$set": update})
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
@@ -150,7 +150,7 @@ func UpdateSoldierProfile() gin.HandlerFunc {
 
 		var updatedProfile models.Army
 
-		if result.MatchedCount == 1 {
+		if result.ModifiedCount == 1 {
 			err := collections.FindOne(ctx, bson.M{"soldier.id": id}).Decode(&updatedProfile)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
@@ -170,7 +170,7 @@ func DeleteASoldierProfile() gin.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
 
-		result, err := collections.DeleteOne(ctx, bson.M{"id": id})
+		result, err := collections.DeleteOne(ctx, bson.M{"soldier.id": id})
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
