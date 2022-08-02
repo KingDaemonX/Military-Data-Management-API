@@ -18,6 +18,7 @@ func main() {
 	// router
 	router := gin.New()
 	router.Use(gin.Logger())
+	routers.AuthRouter(router)
 	routers.Router(router)
 	router.Run(":8080")
 }
