@@ -61,6 +61,8 @@ func CreateASoldierProfile() gin.HandlerFunc {
 
 		soldier.Soldier.Year_of_recruitment, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		soldier.Soldier.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		soldier.Soldier.ID = primitive.NewObjectID()
+		soldier.Soldier.User_id = soldier.Soldier.ID.Hex()
 
 		// serialize the data into soldier profile
 		/*soldierProfile := models.Army{
