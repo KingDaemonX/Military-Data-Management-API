@@ -55,9 +55,12 @@ func CreateASoldierProfile() gin.HandlerFunc {
 
 		count, err := collections.CountDocuments(cbg, bson.M{"email": soldier.Soldier.Email})
 		checkCount(count, err, ctx)
-		
+
 		count, err = collections.CountDocuments(cbg, bson.M{"phone": soldier.Soldier.Phone})
 		checkCount(count, err, ctx)
+
+		soldier.Soldier.Year_of_recruitment, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		soldier.Soldier.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 
 		// serialize the data into soldier profile
 		/*soldierProfile := models.Army{
