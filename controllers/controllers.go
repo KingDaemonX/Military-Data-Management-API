@@ -29,7 +29,7 @@ func Greeter() gin.HandlerFunc {
 // create function
 func CreateASoldierProfile() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		cbg, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		cbg, cancel := context.WithTimeout(context.Background(), time.Second*100)
 		defer cancel()
 
 		var soldier models.Army
@@ -47,7 +47,7 @@ func CreateASoldierProfile() gin.HandlerFunc {
 		}
 
 		// serialize the data into soldier profile
-		soldierProfile := models.Army{
+		/*soldierProfile := models.Army{
 			&models.Soldier{
 				ID:              primitive.NewObjectID(),
 				FirstName:       soldier.Soldier.FirstName,
@@ -69,7 +69,7 @@ func CreateASoldierProfile() gin.HandlerFunc {
 					Department:    soldier.Soldier.Division.Department,
 				},
 			},
-		}
+		} */
 		// &models.Division{
 		// 	DivisionName:  soldier.Division.DivisionName,
 		// 	CommanderName: soldier.Division.CommanderName,
