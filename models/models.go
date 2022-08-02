@@ -19,6 +19,7 @@ type Soldier struct {
 	Nick_name           string             `json:"nick_name" validate:"required,min=2,max=200"`
 	Email               string             `json:"email" validate:"required,email"`
 	Password            string             `json:"password" validate:"required,min=8"`
+	Phone               string             `json:"phone" validate:"required"`
 	User_type           string             `json:"user_type" validate:"required,eq=ADMIN|eq=USER"`
 	Army_number         string             `json:"army_id" validate:"required,min=2,max=200"`
 	Age                 uint               `json:"age" validate:"required"`

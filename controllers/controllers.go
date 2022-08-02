@@ -46,6 +46,7 @@ func CreateASoldierProfile() gin.HandlerFunc {
 			return
 		}
 
+		
 		// serialize the data into soldier profile
 		/*soldierProfile := models.Army{
 			&models.Soldier{
