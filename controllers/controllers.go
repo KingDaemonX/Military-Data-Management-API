@@ -26,6 +26,13 @@ func Greeter() gin.HandlerFunc {
 	}
 }
 
+func checkCount(count int64, err error, c *gin.Context) {
+	if count > 0 {
+		c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"error": "Email or Phone Already Exist"}})
+		return
+	}
+}
+
 // create function
 func CreateASoldierProfile() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -47,6 +54,11 @@ func CreateASoldierProfile() gin.HandlerFunc {
 		}
 
 		count, err := collections.CountDocuments(cbg, bson.M{"email": soldier.Soldier.Email})
+		checkCount(count, err, ctx)
+		
+		count, err = collections.CountDocuments(cbg, bson.M{"phone": soldier.Soldier.Phone})
+		checkCount(count, err, ctx)
+
 		// serialize the data into soldier profile
 		/*soldierProfile := models.Army{
 			&models.Soldier{
