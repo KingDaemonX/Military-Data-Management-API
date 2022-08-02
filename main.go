@@ -5,6 +5,7 @@ import (
 
 	"github.com/KingAnointing/go-project/configs"
 	"github.com/KingAnointing/go-project/routers"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -13,5 +14,10 @@ func main() {
 
 	configs.ConnectDB()
 	fmt.Println("Database is Working Perfectly :)")
-	routers.Router()
+
+	// router
+	router := gin.New()
+	router.Use(gin.Logger())
+	routers.Router(router)
+	router.Run(":8080")
 }
