@@ -64,7 +64,11 @@ func CreateASoldierProfile() gin.HandlerFunc {
 		soldier.Soldier.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		soldier.Soldier.ID = primitive.NewObjectID()
 		soldier.Soldier.User_id = soldier.Soldier.ID.Hex()
-		token, refreshToken, _ := helpers.GenerateAllToken(*soldier.Soldier.First_name, *soldier.Soldier.Last_name, *soldier.Soldier.Email, soldier.Soldier.User_id, *soldier.Soldier.User_type)
+		token, refreshToken, err := helpers.GenerateAllToken(*soldier.Soldier.First_name, *soldier.Soldier.Last_name, *soldier.Soldier.Email, soldier.Soldier.User_id, *soldier.Soldier.User_type)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"error": err.Error()}})
+			return
+		}
 		soldier.Soldier.Token = &token
 		soldier.Soldier.Refresh_Token = &refreshToken
 
