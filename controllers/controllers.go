@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/KingAnointing/go-project/configs"
+	"github.com/KingAnointing/go-project/helpers"
 	"github.com/KingAnointing/go-project/models"
 	"github.com/KingAnointing/go-project/responses"
 	"github.com/gin-gonic/gin"
@@ -63,6 +64,9 @@ func CreateASoldierProfile() gin.HandlerFunc {
 		soldier.Soldier.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		soldier.Soldier.ID = primitive.NewObjectID()
 		soldier.Soldier.User_id = soldier.Soldier.ID.Hex()
+		token, refreshToken, _ := helpers.GenerateAllToken(*soldier.Soldier.First_name, *soldier.Soldier.Last_name, *soldier.Soldier.Email, soldier.Soldier.User_id, *soldier.Soldier.User_type)
+		soldier.Soldier.Token = &token
+		soldier.Soldier.Refresh_Token = &refreshToken
 
 		// serialize the data into soldier profile
 		/*soldierProfile := models.Army{
