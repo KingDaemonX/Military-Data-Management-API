@@ -7,12 +7,20 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func MongoURI() string {
+func loadEnv() {
 	err := godotenv.Load()
 
 	if err != nil {
 		log.Fatal(err)
 	}
+}
 
+func MongoURI() string {
+	loadEnv()
 	return os.Getenv("MONGOURI")
+}
+
+func SecretKey() string {
+	loadEnv()
+	return os.Getenv("SECRET_KEY")
 }
