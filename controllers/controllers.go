@@ -85,6 +85,15 @@ func CreateASoldierProfile() gin.HandlerFunc {
 		hashedPassword := hashPassword(ctx, *soldier.Soldier.Password)
 		soldier.Soldier.Password = &hashedPassword
 
+		result, err := collections.InsertOne(cbg, &soldier)
+
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, responses.Response{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": result}})
+
 		// serialize the data into soldier profile
 		/*soldierProfile := models.Army{
 			&models.Soldier{
