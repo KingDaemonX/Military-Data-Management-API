@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -15,6 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var collections *mongo.Collection = configs.DbCollection()
@@ -27,6 +29,14 @@ func Greeter() gin.HandlerFunc {
 	}
 }
 
+func hashPassword(c *gin.Context, password string) string {
+	byte, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"error": err.Error()}})
+		log.Fatal(err)
+	}
+	return string(byte)
+}
 func checkCount(count int64, err error, c *gin.Context) {
 	if count > 0 {
 		c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"error": "Email or Phone Already Exist"}})
@@ -71,6 +81,9 @@ func CreateASoldierProfile() gin.HandlerFunc {
 		}
 		soldier.Soldier.Token = &token
 		soldier.Soldier.Refresh_Token = &refreshToken
+
+		hashedPassword := hashPassword(ctx, *soldier.Soldier.Password)
+		soldier.Soldier.Password = &hashedPassword
 
 		// serialize the data into soldier profile
 		/*soldierProfile := models.Army{
